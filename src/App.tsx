@@ -1,7 +1,7 @@
 import React from "react";
-import HomePage from "./Page/HomePage";
-import MovieDetailPage from "./Page/MovieDetailPage";
-import WatchListPage from "./Page/WatchListPage";
+import HomePage from "./pages/HomePage";
+import MovieDetailPage from "./pages/MovieDetailPage";
+import WatchListPage from "./pages/WatchListPage";
 import { Routes, Route } from "react-router-dom";
 
 function App() {

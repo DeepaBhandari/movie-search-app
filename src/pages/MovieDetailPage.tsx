@@ -1,11 +1,10 @@
 import React from "react";
-import MovieCard from "../components/MovieCard";
 import MovieDetail from "../components/MovieDetail";
 
-const MovieDetailPage = () => {
+const MovieDetailPage: React.FC = () => {
   return (
     <div>
-      <MovieCard />
+      <h1>Movie Details</h1>
       <MovieDetail />
     </div>
   );
