@@ -1,17 +1,21 @@
 import React from "react";
-import { useSelector } from "react-redux";
 import MovieCard from "./MovieCard";
-import { RootState } from "../redux/store";
 
-const MovieList: React.FC = () => {
-  const movies = useSelector((state: RootState) => state.search.movies);
+interface MovieListProps {
+  movies: any[];
+  onAddToWatchlist: (movie: any) => void;
+}
 
+const MovieList: React.FC<MovieListProps> = ({ movies, onAddToWatchlist }) => {
   return (
-    <div>
-      {movies &&
-        movies.map((movie: any) => (
-          <MovieCard key={movie.imdbID} movie={movie} />
-        ))}
+    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+      {movies.map((movie) => (
+        <MovieCard
+          key={movie.imdbID}
+          movie={movie}
+          onAddToWatchlist={onAddToWatchlist}
+        />
+      ))}
     </div>
   );
 };

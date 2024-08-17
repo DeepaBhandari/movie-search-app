@@ -1,9 +1,16 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
-import { Movie } from "../../types/movie";
-
+export interface MovieDetail {
+  Title: string;
+  Poster: string;
+  Plot: string;
+  Genre: string;
+  Director: string;
+  Actors: string;
+  Released: string;
+}
 interface MovieDetailState {
-  movie: Movie | null;
+  movie: MovieDetail | null;
   loading: boolean;
   error: string | null;
 }
@@ -14,13 +21,13 @@ const initialState: MovieDetailState = {
   error: null,
 };
 
-export const getMovieDetail = createAsyncThunk(
+export const getMovieDetail = createAsyncThunk<MovieDetail, string>(
   "movieDetail/getMovieDetail",
   async (id: string) => {
     const response = await axios.get(
       `http://www.omdbapi.com/?apikey=4feb8896&i=${id}`
     );
-    return response.data as Movie;
+    return response.data;
   }
 );
 
@@ -32,7 +39,6 @@ const movieDetailSlice = createSlice({
     builder
       .addCase(getMovieDetail.pending, (state) => {
         state.loading = true;
-        state.error = null;
       })
       .addCase(getMovieDetail.fulfilled, (state, action) => {
         state.loading = false;

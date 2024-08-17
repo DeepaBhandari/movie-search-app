@@ -1,29 +1,46 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import { fetchMovies } from "../../api/movieApi";
+import axios from "axios";
+
+export interface SearchState {
+  query: string;
+  results: any[];
+  loading: boolean;
+  error: string | null;
+}
+
+const initialState: SearchState = {
+  query: "",
+  results: [],
+  loading: false,
+  error: null,
+};
 
 export const searchMovies = createAsyncThunk(
-  "movies/search",
+  "search/searchMovies",
   async (query: string) => {
-    const response = await fetchMovies(query);
-    return response.Search; // Assuming API returns a 'Search' array
+    const response = await axios.get(
+      `http://www.omdbapi.com/?apikey=4feb8896&s=${query}`
+    );
+    return response.data.Search;
   }
 );
 
 const searchSlice = createSlice({
   name: "search",
-  initialState: { movies: [], status: "idle" },
+  initialState,
   reducers: {},
   extraReducers: (builder) => {
     builder
       .addCase(searchMovies.pending, (state) => {
-        state.status = "loading";
+        state.loading = true;
       })
       .addCase(searchMovies.fulfilled, (state, action) => {
-        state.status = "succeeded";
-        state.movies = action.payload;
+        state.loading = false;
+        state.results = action.payload || [];
       })
-      .addCase(searchMovies.rejected, (state) => {
-        state.status = "failed";
+      .addCase(searchMovies.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.error.message || "Failed to fetch movies";
       });
   },
 });

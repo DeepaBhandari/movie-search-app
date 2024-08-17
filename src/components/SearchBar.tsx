@@ -7,18 +7,26 @@ const SearchBar: React.FC = () => {
   const dispatch = useAppDispatch();
 
   const handleSearch = () => {
-    dispatch(searchMovies(query));
+    if (query.trim()) {
+      dispatch(searchMovies(query));
+    }
   };
 
   return (
-    <div>
+    <div className="flex mb-4">
       <input
         type="text"
         value={query}
         onChange={(e) => setQuery(e.target.value)}
-        placeholder="Search for a movie..."
+        placeholder="Search for movies..."
+        className="flex-grow p-2 border border-gray-300 rounded-lg"
       />
-      <button onClick={handleSearch}>Search</button>
+      <button
+        onClick={handleSearch}
+        className="ml-2 bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600"
+      >
+        Search
+      </button>
     </div>
   );
 };

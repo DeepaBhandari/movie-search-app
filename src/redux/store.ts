@@ -1,10 +1,10 @@
 import { configureStore } from "@reduxjs/toolkit";
+import { useDispatch, useSelector, TypedUseSelectorHook } from "react-redux";
 import searchReducer from "./slices/searchSlice";
 import movieDetailReducer from "./slices/movieDetailSlice";
 import watchlistReducer from "./slices/watchListSlice";
-import { useDispatch } from "react-redux";
 
-const store = configureStore({
+export const store = configureStore({
   reducer: {
     search: searchReducer,
     movieDetail: movieDetailReducer,
@@ -12,13 +12,8 @@ const store = configureStore({
   },
 });
 
-store.subscribe(() => {
-  const watchlist = store.getState().watchlist;
-  localStorage.setItem("watchlist", JSON.stringify(watchlist.movies));
-});
-
 export type RootState = ReturnType<typeof store.getState>;
 export type AppDispatch = typeof store.dispatch;
-export const useAppDispatch: () => AppDispatch = useDispatch;
 
-export default store;
+export const useAppDispatch: () => AppDispatch = useDispatch;
+export const useAppSelector: TypedUseSelectorHook<RootState> = useSelector;

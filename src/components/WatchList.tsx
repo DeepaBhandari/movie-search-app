@@ -1,32 +1,26 @@
 import React from "react";
-import { useSelector } from "react-redux";
-import { useAppDispatch, RootState } from "../redux/store";
-import { removeMovieFromWatchlist } from "../redux/slices/watchListSlice";
 import MovieCard from "./MovieCard";
 
-const WatchList: React.FC = () => {
-  const watchList = useSelector((state: RootState) => state.watchlist.movies);
-  const dispatch = useAppDispatch();
+interface WatchlistProps {
+  watchlist: any[];
+  onRemoveFromWatchlist: (movie: any) => void;
+}
 
-  const handleRemove = (id: string) => {
-    dispatch(removeMovieFromWatchlist(id));
-  };
-
+const Watchlist: React.FC<WatchlistProps> = ({
+  watchlist,
+  onRemoveFromWatchlist,
+}) => {
   return (
-    <div>
-      <h2>Your Watchlist</h2>
-      {watchList.length > 0 ? (
-        watchList.map((movie: any) => (
-          <div key={movie.imdbID}>
-            <MovieCard movie={movie} />
-            <button onClick={() => handleRemove(movie.imdbID)}>Remove</button>
-          </div>
-        ))
-      ) : (
-        <p>No movies in your watchlist.</p>
-      )}
+    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+      {watchlist.map((movie) => (
+        <MovieCard
+          key={movie.imdbID}
+          movie={movie}
+          onAddToWatchlist={onRemoveFromWatchlist}
+        />
+      ))}
     </div>
   );
 };
 
-export default WatchList;
+export default Watchlist;

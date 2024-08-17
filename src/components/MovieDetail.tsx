@@ -1,35 +1,24 @@
-import React, { useEffect } from "react";
-import { useParams } from "react-router-dom";
-import { useSelector } from "react-redux";
-import { getMovieDetail } from "../redux/slices/movieDetailSlice";
-import { addMovieToWatchlist } from "../redux/slices/watchListSlice";
-import { useAppDispatch, RootState } from "../redux/store";
-import { Movie } from "../types/movie";
+import React from "react";
+import { MovieDetail as MovieDetailType } from "../redux/slices/movieDetailSlice";
 
-const MovieDetail: React.FC = () => {
-  const { id } = useParams<{ id: string }>();
-  const dispatch = useAppDispatch();
-  const movie = useSelector(
-    (state: RootState) => state.movieDetail.movie
-  ) as Movie | null;
+interface MovieDetailProps {
+  movie: MovieDetailType;
+  onAddToWatchlist: () => void;
+}
 
-  useEffect(() => {
-    if (id) {
-      dispatch(getMovieDetail(id));
-    }
-  }, [dispatch, id]);
-
-  const handleAddToWatchlist = () => {
-    if (movie) {
-      dispatch(addMovieToWatchlist(movie));
-    }
-  };
-
-  return movie ? (
-    <div>
-      <img src={movie.Poster} alt={movie.Title} />
-      <h2>{movie.Title}</h2>
-      <p>{movie.Plot}</p>
+const MovieDetail: React.FC<MovieDetailProps> = ({
+  movie,
+  onAddToWatchlist,
+}) => {
+  return (
+    <div className="p-4 bg-white rounded-lg shadow-md">
+      <img
+        src={movie.Poster}
+        alt={movie.Title}
+        className="w-full h-80 object-cover rounded-lg mb-4"
+      />
+      <h2 className="text-2xl font-bold">{movie.Title}</h2>
+      <p className="mt-2">{movie.Plot}</p>
       <p>
         <strong>Genre:</strong> {movie.Genre}
       </p>
@@ -42,10 +31,13 @@ const MovieDetail: React.FC = () => {
       <p>
         <strong>Release Date:</strong> {movie.Released}
       </p>
-      <button onClick={handleAddToWatchlist}>Add to Watchlist</button>
+      <button
+        onClick={onAddToWatchlist}
+        className="mt-4 bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600"
+      >
+        Add to Watchlist
+      </button>
     </div>
-  ) : (
-    <p>Loading...</p>
   );
 };
 
