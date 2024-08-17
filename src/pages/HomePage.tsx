@@ -105,10 +105,14 @@ const HomePage: React.FC = () => {
         {/* Watchlist Row */}
         <div>
           <h2 className="text-2xl font-bold mb-4">Watchlist</h2>
-          <Watchlist
-            movies={watchlist}
-            onRemoveFromWatchlist={handleRemoveFromWatchlist}
-          />
+          {watchlist.length > 0 ? (
+            <Watchlist
+              movies={watchlist}
+              onRemoveFromWatchlist={handleRemoveFromWatchlist}
+            />
+          ) : (
+            <p>No movies in your watchlist</p>
+          )}
         </div>
       </div>
     </div>
