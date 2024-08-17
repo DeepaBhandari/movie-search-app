@@ -53,6 +53,12 @@ const HomePage: React.FC = () => {
     setShowDetail(false);
   };
 
+  const handleAddToWatchlistFromDetails = () => {
+    if (movieDetail) {
+      dispatch(addMovieToWatchlist(movieDetail));
+    }
+  };
+
   return (
     <div className="container mx-auto p-4">
       <SearchBar
@@ -95,7 +101,7 @@ const HomePage: React.FC = () => {
               {movieDetail && (
                 <MovieDetail
                   movie={movieDetail}
-                  onAddToWatchlist={() => handleAddToWatchlist(movieDetail)}
+                  onAddToWatchlist={handleAddToWatchlistFromDetails}
                   isAdded={isMovieInWatchlist(movieDetail.imdbID)}
                 />
               )}

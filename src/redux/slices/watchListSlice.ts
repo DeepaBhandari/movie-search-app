@@ -6,7 +6,7 @@ interface WatchlistState {
 }
 
 const initialState: WatchlistState = {
-  movies: [],
+  movies: JSON.parse(localStorage.getItem("watchlist") || "[]"),
 };
 
 const watchlistSlice = createSlice({
@@ -14,17 +14,22 @@ const watchlistSlice = createSlice({
   initialState,
   reducers: {
     addMovieToWatchlist(state, action: PayloadAction<Movie>) {
-      state.movies.push(action.payload);
+      const movie = action.payload;
+      const existingMovie = state.movies.find((m) => m.imdbID === movie.imdbID);
+      if (!existingMovie) {
+        state.movies.push(movie);
+        localStorage.setItem("watchlist", JSON.stringify(state.movies)); // Save to local storage
+      }
     },
     removeMovieFromWatchlist(state, action: PayloadAction<string>) {
       state.movies = state.movies.filter(
         (movie) => movie.imdbID !== action.payload
       );
+      localStorage.setItem("watchlist", JSON.stringify(state.movies)); // Save to local storage
     },
   },
 });
 
 export const { addMovieToWatchlist, removeMovieFromWatchlist } =
   watchlistSlice.actions;
-
 export default watchlistSlice.reducer;
