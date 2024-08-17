@@ -13,18 +13,13 @@ const MovieDetail: React.FC<MovieDetailProps> = ({
   isAdded,
 }) => {
   return (
-    <div className="bg-white shadow-lg rounded-lg p-6">
-      <h2 className="text-2xl font-bold mb-4">{movie.Title}</h2>
-      <img
-        src={movie.Poster}
-        alt={movie.Title}
-        className="w-full h-64 object-cover mb-4"
-      />
-      <p className="mb-2">
-        <strong>Plot:</strong> {movie.Plot}
-      </p>
+    <div className="p-4 border rounded-lg shadow-md">
+      <h2 className="text-2xl font-bold mb-2">{movie.Title}</h2>
       <p className="mb-2">
         <strong>Genre:</strong> {movie.Genre}
+      </p>
+      <p className="mb-2">
+        <strong>Released:</strong> {movie.Released}
       </p>
       <p className="mb-2">
         <strong>Director:</strong> {movie.Director}
@@ -32,19 +27,17 @@ const MovieDetail: React.FC<MovieDetailProps> = ({
       <p className="mb-2">
         <strong>Actors:</strong> {movie.Actors}
       </p>
-      <p className="mb-2">
-        <strong>Released:</strong> {movie.Released}
-      </p>
       <p className="mb-4">
-        <strong>Rating:</strong> {movie.imdbRating}
+        <strong>Plot:</strong> {movie.Plot}
       </p>
       <button
-        onClick={onAddToWatchlist}
         className={`px-4 py-2 rounded ${
-          isAdded ? "bg-red-500" : "bg-green-500"
+          isAdded ? "bg-gray-500" : "bg-blue-500"
         } text-white`}
+        onClick={onAddToWatchlist}
+        disabled={isAdded}
       >
-        {isAdded ? "Remove from Watchlist" : "Add to Watchlist"}
+        {isAdded ? "Added to Watchlist" : "Add to Watchlist"}
       </button>
     </div>
   );

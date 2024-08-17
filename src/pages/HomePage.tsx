@@ -20,6 +20,7 @@ const HomePage: React.FC = () => {
   const watchlist = useAppSelector((state) => state.watchlist.movies);
   const movieDetail = useAppSelector((state) => state.movieDetail.movie);
   const [localQuery, setLocalQuery] = useState(query);
+  const [showDetail, setShowDetail] = useState(false);
 
   useEffect(() => {
     if (query) {
@@ -45,12 +46,11 @@ const HomePage: React.FC = () => {
 
   const handleViewDetails = (movie: Movie) => {
     dispatch(fetchMovieDetail(movie.imdbID));
+    setShowDetail(true);
   };
 
-  const handleAddToWatchlistFromDetails = () => {
-    if (movieDetail) {
-      dispatch(addMovieToWatchlist(movieDetail));
-    }
+  const handleCloseDetails = () => {
+    setShowDetail(false);
   };
 
   return (
@@ -61,22 +61,46 @@ const HomePage: React.FC = () => {
         onSearch={handleSearch}
       />
       <div className="space-y-8">
-        {/* Movies Row */}
-        <div>
-          <h2 className="text-2xl font-bold mb-4">Movies</h2>
-          <div className="carousel-container">
-            {status === "loading" && <p>Loading...</p>}
-            {status === "failed" && <p>{error}</p>}
-            {status === "succeeded" && (
-              <MovieList
-                movies={results}
-                onAddToWatchlist={handleAddToWatchlist}
-                onRemoveFromWatchlist={handleRemoveFromWatchlist}
-                isMovieInWatchlist={isMovieInWatchlist}
-                onViewDetails={handleViewDetails}
-              />
-            )}
+        <div className="flex">
+          {/* Movies Row */}
+          <div
+            className={`w-${
+              showDetail ? "2/3" : "full"
+            } transition-width duration-300`}
+          >
+            <h2 className="text-2xl font-bold mb-4">Movies</h2>
+            <div className="carousel-container">
+              {status === "loading" && <p>Loading...</p>}
+              {status === "failed" && <p>{error}</p>}
+              {status === "succeeded" && (
+                <MovieList
+                  movies={results}
+                  onAddToWatchlist={handleAddToWatchlist}
+                  onRemoveFromWatchlist={handleRemoveFromWatchlist}
+                  isMovieInWatchlist={isMovieInWatchlist}
+                  onViewDetails={handleViewDetails}
+                />
+              )}
+            </div>
           </div>
+          {/* Movie Detail */}
+          {showDetail && (
+            <div className="w-1/3 transition-width duration-300">
+              <button
+                onClick={handleCloseDetails}
+                className="text-red-500 float-right"
+              >
+                X
+              </button>
+              {movieDetail && (
+                <MovieDetail
+                  movie={movieDetail}
+                  onAddToWatchlist={() => handleAddToWatchlist(movieDetail)}
+                  isAdded={isMovieInWatchlist(movieDetail.imdbID)}
+                />
+              )}
+            </div>
+          )}
         </div>
         {/* Watchlist Row */}
         <div>
@@ -86,16 +110,6 @@ const HomePage: React.FC = () => {
             onRemoveFromWatchlist={handleRemoveFromWatchlist}
           />
         </div>
-        {/* Movie Detail */}
-        {movieDetail && (
-          <div className="mt-8">
-            <MovieDetail
-              movie={movieDetail}
-              onAddToWatchlist={handleAddToWatchlistFromDetails}
-              isAdded={isMovieInWatchlist(movieDetail.imdbID)}
-            />
-          </div>
-        )}
       </div>
     </div>
   );
