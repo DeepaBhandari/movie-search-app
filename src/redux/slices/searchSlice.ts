@@ -1,21 +1,22 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
+import { Movie } from "../../types/movie";
 
-export interface SearchState {
+interface SearchState {
   query: string;
-  results: any[];
-  loading: boolean;
+  results: Movie[];
+  status: "idle" | "loading" | "succeeded" | "failed";
   error: string | null;
 }
 
 const initialState: SearchState = {
   query: "",
   results: [],
-  loading: false,
+  status: "idle",
   error: null,
 };
 
-export const searchMovies = createAsyncThunk(
+export const searchMovies = createAsyncThunk<Movie[], string>(
   "search/searchMovies",
   async (query: string) => {
     const response = await axios.get(
@@ -28,21 +29,26 @@ export const searchMovies = createAsyncThunk(
 const searchSlice = createSlice({
   name: "search",
   initialState,
-  reducers: {},
+  reducers: {
+    setQuery: (state, action) => {
+      state.query = action.payload;
+    },
+  },
   extraReducers: (builder) => {
     builder
       .addCase(searchMovies.pending, (state) => {
-        state.loading = true;
+        state.status = "loading";
       })
       .addCase(searchMovies.fulfilled, (state, action) => {
-        state.loading = false;
-        state.results = action.payload || [];
+        state.status = "succeeded";
+        state.results = action.payload;
       })
       .addCase(searchMovies.rejected, (state, action) => {
-        state.loading = false;
-        state.error = action.error.message || "Failed to fetch movies";
+        state.status = "failed";
+        state.error = action.error.message || "Failed to fetch";
       });
   },
 });
 
+export const { setQuery } = searchSlice.actions;
 export default searchSlice.reducer;

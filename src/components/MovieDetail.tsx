@@ -1,14 +1,16 @@
 import React from "react";
-import { MovieDetail as MovieDetailType } from "../redux/slices/movieDetailSlice";
+import { MovieDetail as MovieDetailType } from "../types/movie";
 
 interface MovieDetailProps {
   movie: MovieDetailType;
   onAddToWatchlist: () => void;
+  isAdded: boolean;
 }
 
 const MovieDetail: React.FC<MovieDetailProps> = ({
   movie,
   onAddToWatchlist,
+  isAdded,
 }) => {
   return (
     <div className="p-4 bg-white rounded-lg shadow-md">
@@ -33,9 +35,12 @@ const MovieDetail: React.FC<MovieDetailProps> = ({
       </p>
       <button
         onClick={onAddToWatchlist}
-        className="mt-4 bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600"
+        className={`mt-4 px-4 py-2 rounded-lg ${
+          isAdded ? "bg-gray-500" : "bg-green-500"
+        } text-white`}
+        disabled={isAdded}
       >
-        Add to Watchlist
+        {isAdded ? "Added" : "Add to Watchlist"}
       </button>
     </div>
   );

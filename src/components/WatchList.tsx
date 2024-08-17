@@ -1,22 +1,26 @@
 import React from "react";
 import MovieCard from "./MovieCard";
+import { Movie } from "../types/movie";
 
 interface WatchlistProps {
-  watchlist: any[];
-  onRemoveFromWatchlist: (movie: any) => void;
+  movies: Movie[];
+  onRemoveFromWatchlist: (id: string) => void;
 }
 
 const Watchlist: React.FC<WatchlistProps> = ({
-  watchlist,
+  movies,
   onRemoveFromWatchlist,
 }) => {
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-      {watchlist.map((movie) => (
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+      {movies.map((movie) => (
         <MovieCard
           key={movie.imdbID}
           movie={movie}
-          onAddToWatchlist={onRemoveFromWatchlist}
+          onAddToWatchlist={() => {}}
+          onRemoveFromWatchlist={() => onRemoveFromWatchlist(movie.imdbID)}
+          isAdded={true}
+          onViewDetails={() => {}}
         />
       ))}
     </div>

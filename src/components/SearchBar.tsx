@@ -1,29 +1,28 @@
-import React, { useState } from "react";
-import { useAppDispatch } from "../redux/store";
-import { searchMovies } from "../redux/slices/searchSlice";
+import React from "react";
 
-const SearchBar: React.FC = () => {
-  const [query, setQuery] = useState("");
-  const dispatch = useAppDispatch();
+interface SearchBarProps {
+  query: string;
+  onQueryChange: (query: string) => void;
+  onSearch: () => void;
+}
 
-  const handleSearch = () => {
-    if (query.trim()) {
-      dispatch(searchMovies(query));
-    }
-  };
-
+const SearchBar: React.FC<SearchBarProps> = ({
+  query,
+  onQueryChange,
+  onSearch,
+}) => {
   return (
-    <div className="flex mb-4">
+    <div className="mb-4">
       <input
         type="text"
         value={query}
-        onChange={(e) => setQuery(e.target.value)}
-        placeholder="Search for movies..."
-        className="flex-grow p-2 border border-gray-300 rounded-lg"
+        onChange={(e) => onQueryChange(e.target.value)}
+        className="border rounded-lg p-2 w-full"
+        placeholder="Search for a movie..."
       />
       <button
-        onClick={handleSearch}
-        className="ml-2 bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600"
+        onClick={onSearch}
+        className="mt-2 bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
       >
         Search
       </button>

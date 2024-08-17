@@ -1,23 +1,16 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
-export interface MovieDetail {
-  Title: string;
-  Poster: string;
-  Plot: string;
-  Genre: string;
-  Director: string;
-  Actors: string;
-  Released: string;
-}
+import { MovieDetail } from "../../types/movie";
+
 interface MovieDetailState {
   movie: MovieDetail | null;
-  loading: boolean;
+  status: "idle" | "loading" | "succeeded" | "failed";
   error: string | null;
 }
 
 const initialState: MovieDetailState = {
   movie: null,
-  loading: false,
+  status: "idle",
   error: null,
 };
 
@@ -38,15 +31,15 @@ const movieDetailSlice = createSlice({
   extraReducers: (builder) => {
     builder
       .addCase(getMovieDetail.pending, (state) => {
-        state.loading = true;
+        state.status = "loading";
       })
       .addCase(getMovieDetail.fulfilled, (state, action) => {
-        state.loading = false;
+        state.status = "succeeded";
         state.movie = action.payload;
       })
       .addCase(getMovieDetail.rejected, (state, action) => {
-        state.loading = false;
-        state.error = action.error.message || "Failed to fetch movie details";
+        state.status = "failed";
+        state.error = action.error.message || "Failed to fetch";
       });
   },
 });

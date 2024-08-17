@@ -1,22 +1,23 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { Movie } from "../../types/movie";
+
+interface WatchlistState {
+  movies: Movie[];
+}
+
+const initialState: WatchlistState = {
+  movies: [],
+};
 
 const watchlistSlice = createSlice({
   name: "watchlist",
-  initialState: {
-    watchlist: [] as any[],
-  },
+  initialState,
   reducers: {
-    addMovieToWatchlist: (state, action) => {
-      const movie = action.payload;
-      const existingMovie = state.watchlist.find(
-        (m) => m.imdbID === movie.imdbID
-      );
-      if (!existingMovie) {
-        state.watchlist.push(movie);
-      }
+    addMovieToWatchlist(state, action: PayloadAction<Movie>) {
+      state.movies.push(action.payload);
     },
-    removeMovieFromWatchlist: (state, action) => {
-      state.watchlist = state.watchlist.filter(
+    removeMovieFromWatchlist(state, action: PayloadAction<string>) {
+      state.movies = state.movies.filter(
         (movie) => movie.imdbID !== action.payload
       );
     },
@@ -25,4 +26,5 @@ const watchlistSlice = createSlice({
 
 export const { addMovieToWatchlist, removeMovieFromWatchlist } =
   watchlistSlice.actions;
+
 export default watchlistSlice.reducer;
