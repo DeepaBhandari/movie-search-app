@@ -10,7 +10,7 @@ const App: React.FC = () => {
       <div className="container mx-auto p-4">
         <Routes>
           <Route path="/" element={<Home />} />
-          <Route path="/movie/:id" element={<MovieDetailPage />} />
+          <Route path="/movie/:imdbId" element={<MovieDetailPage />} />
           <Route path="/watchlist" element={<WatchlistPage />} />
         </Routes>
       </div>

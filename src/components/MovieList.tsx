@@ -1,6 +1,7 @@
 import React from "react";
 import MovieCard from "./MovieCard";
-import type { Movie } from "../types/movie";
+import { Movie } from "../types/movie";
+
 interface MovieListProps {
   movies: Movie[];
   onAddToWatchlist: (movie: Movie) => void;
@@ -22,7 +23,7 @@ const MovieList: React.FC<MovieListProps> = ({
         <MovieCard
           key={movie.imdbID}
           movie={movie}
-          isAdded={isMovieInWatchlist(movie.imdbID)} // Match the prop name
+          isInWatchlist={isMovieInWatchlist(movie.imdbID)}
           onAddToWatchlist={() => onAddToWatchlist(movie)}
           onRemoveFromWatchlist={() => onRemoveFromWatchlist(movie.imdbID)}
           onViewDetails={() => onViewDetails(movie)}

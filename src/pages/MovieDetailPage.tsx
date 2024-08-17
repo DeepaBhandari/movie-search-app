@@ -1,42 +1,40 @@
 import React, { useEffect } from "react";
-import { useParams } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../redux/store";
-import { getMovieDetail } from "../redux/slices/movieDetailSlice";
+import { fetchMovieDetail } from "../redux/slices/movieDetailSlice";
+import { useParams } from "react-router-dom";
 import MovieDetail from "../components/MovieDetail";
-import { addMovieToWatchlist } from "../redux/slices/watchListSlice";
 
 const MovieDetailPage: React.FC = () => {
-  const { id } = useParams<{ id: string }>();
   const dispatch = useAppDispatch();
-  const { movie, status, error } = useAppSelector((state) => state.movieDetail);
-  const watchlist = useAppSelector((state) => state.watchlist.movies);
+  const { imdbID } = useParams<{ imdbID: string }>();
+  const movieDetail = useAppSelector((state) => state.movieDetail.movie);
+  const status = useAppSelector((state) => state.movieDetail.status);
+  const error = useAppSelector((state) => state.movieDetail.error);
 
   useEffect(() => {
-    if (id) {
-      dispatch(getMovieDetail(id));
+    if (imdbID) {
+      dispatch(fetchMovieDetail(imdbID));
     }
-  }, [dispatch, id]);
+  }, [dispatch, imdbID]);
 
-  const isMovieInWatchlist = (id: string) => {
-    return watchlist.some((movie) => movie.imdbID === id);
-  };
+  if (status === "loading") {
+    return <p>Loading...</p>;
+  }
 
-  const handleAddToWatchlist = () => {
-    if (movie) {
-      dispatch(addMovieToWatchlist(movie));
-    }
-  };
+  if (status === "failed") {
+    return <p>{error}</p>;
+  }
 
   return (
     <div className="container mx-auto p-4">
-      {status === "loading" && <p>Loading...</p>}
-      {status === "failed" && <p>{error}</p>}
-      {status === "succeeded" && movie && (
+      {movieDetail ? (
         <MovieDetail
-          movie={movie}
-          onAddToWatchlist={handleAddToWatchlist}
-          isAdded={isMovieInWatchlist(movie.imdbID)}
+          movie={movieDetail}
+          onAddToWatchlist={() => {}}
+          isAdded={false}
         />
+      ) : (
+        <p>No details available</p>
       )}
     </div>
   );

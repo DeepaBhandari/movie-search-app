@@ -11,4 +11,5 @@ export interface MovieDetail extends Movie {
   Director: string;
   Actors: string;
   Released: string;
+  imdbRating: string;
 }

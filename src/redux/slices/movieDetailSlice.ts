@@ -14,13 +14,13 @@ const initialState: MovieDetailState = {
   error: null,
 };
 
-export const getMovieDetail = createAsyncThunk<MovieDetail, string>(
-  "movieDetail/getMovieDetail",
-  async (id: string) => {
+export const fetchMovieDetail = createAsyncThunk(
+  "movieDetail/fetchMovieDetail",
+  async (imdbID: string) => {
     const response = await axios.get(
-      `http://www.omdbapi.com/?apikey=4feb8896&i=${id}`
+      `http://www.omdbapi.com/?i=${imdbID}&apikey=4feb8896`
     );
-    return response.data;
+    return response.data as MovieDetail;
   }
 );
 
@@ -30,16 +30,16 @@ const movieDetailSlice = createSlice({
   reducers: {},
   extraReducers: (builder) => {
     builder
-      .addCase(getMovieDetail.pending, (state) => {
+      .addCase(fetchMovieDetail.pending, (state) => {
         state.status = "loading";
       })
-      .addCase(getMovieDetail.fulfilled, (state, action) => {
+      .addCase(fetchMovieDetail.fulfilled, (state, action) => {
         state.status = "succeeded";
         state.movie = action.payload;
       })
-      .addCase(getMovieDetail.rejected, (state, action) => {
+      .addCase(fetchMovieDetail.rejected, (state, action) => {
         state.status = "failed";
-        state.error = action.error.message || "Failed to fetch";
+        state.error = action.error.message || "Failed to fetch movie details";
       });
   },
 });

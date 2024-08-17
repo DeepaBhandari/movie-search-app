@@ -1,15 +1,16 @@
 import React, { useState, useEffect } from "react";
 import { useAppDispatch, useAppSelector } from "../redux/store";
 import { searchMovies, setQuery } from "../redux/slices/searchSlice";
-import SearchBar from "../components/SearchBar";
-import MovieList from "../components/MovieList";
-import Watchlist from "../components/WatchList";
-import MovieDetail from "../components/MovieDetail";
 import {
   addMovieToWatchlist,
   removeMovieFromWatchlist,
 } from "../redux/slices/watchListSlice";
-import { Movie, MovieDetail as MovieDetailType } from "../types/movie";
+import { fetchMovieDetail } from "../redux/slices/movieDetailSlice";
+import SearchBar from "../components/SearchBar";
+import MovieList from "../components/MovieList";
+import Watchlist from "../components/WatchList";
+import MovieDetail from "../components/MovieDetail";
+import { Movie } from "../types/movie";
 
 const HomePage: React.FC = () => {
   const dispatch = useAppDispatch();
@@ -17,10 +18,8 @@ const HomePage: React.FC = () => {
     (state) => state.search
   );
   const watchlist = useAppSelector((state) => state.watchlist.movies);
+  const movieDetail = useAppSelector((state) => state.movieDetail.movie);
   const [localQuery, setLocalQuery] = useState(query);
-  const [viewingDetails, setViewingDetails] = useState<MovieDetailType | null>(
-    null
-  );
 
   useEffect(() => {
     if (query) {
@@ -45,15 +44,12 @@ const HomePage: React.FC = () => {
   };
 
   const handleViewDetails = (movie: Movie) => {
-    const movieDetail = results.find(
-      (result) => result.imdbID === movie.imdbID
-    ) as MovieDetailType;
-    setViewingDetails(movieDetail);
+    dispatch(fetchMovieDetail(movie.imdbID));
   };
 
   const handleAddToWatchlistFromDetails = () => {
-    if (viewingDetails) {
-      dispatch(addMovieToWatchlist(viewingDetails));
+    if (movieDetail) {
+      dispatch(addMovieToWatchlist(movieDetail));
     }
   };
 
@@ -64,34 +60,42 @@ const HomePage: React.FC = () => {
         onQueryChange={setLocalQuery}
         onSearch={handleSearch}
       />
-      <div className="flex">
-        <div className="w-full md:w-2/3 pr-4">
-          {status === "loading" && <p>Loading...</p>}
-          {status === "failed" && <p>{error}</p>}
-          {status === "succeeded" && (
-            <MovieList
-              movies={results}
-              onAddToWatchlist={handleAddToWatchlist}
-              onRemoveFromWatchlist={handleRemoveFromWatchlist}
-              isMovieInWatchlist={isMovieInWatchlist}
-              onViewDetails={handleViewDetails}
-            />
-          )}
+      <div className="space-y-8">
+        {/* Movies Row */}
+        <div>
+          <h2 className="text-2xl font-bold mb-4">Movies</h2>
+          <div className="carousel-container">
+            {status === "loading" && <p>Loading...</p>}
+            {status === "failed" && <p>{error}</p>}
+            {status === "succeeded" && (
+              <MovieList
+                movies={results}
+                onAddToWatchlist={handleAddToWatchlist}
+                onRemoveFromWatchlist={handleRemoveFromWatchlist}
+                isMovieInWatchlist={isMovieInWatchlist}
+                onViewDetails={handleViewDetails}
+              />
+            )}
+          </div>
         </div>
-        <div className="w-full md:w-1/3">
-          <h2 className="text-2xl font-bold mt-8">Watchlist</h2>
+        {/* Watchlist Row */}
+        <div>
+          <h2 className="text-2xl font-bold mb-4">Watchlist</h2>
           <Watchlist
             movies={watchlist}
             onRemoveFromWatchlist={handleRemoveFromWatchlist}
           />
-          {viewingDetails && (
-            <MovieDetail
-              movie={viewingDetails}
-              onAddToWatchlist={handleAddToWatchlistFromDetails}
-              isAdded={isMovieInWatchlist(viewingDetails.imdbID)}
-            />
-          )}
         </div>
+        {/* Movie Detail */}
+        {movieDetail && (
+          <div className="mt-8">
+            <MovieDetail
+              movie={movieDetail}
+              onAddToWatchlist={handleAddToWatchlistFromDetails}
+              isAdded={isMovieInWatchlist(movieDetail.imdbID)}
+            />
+          </div>
+        )}
       </div>
     </div>
   );
