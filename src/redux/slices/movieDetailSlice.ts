@@ -18,7 +18,7 @@ export const getMovieDetail = createAsyncThunk(
   "movieDetail/getMovieDetail",
   async (id: string) => {
     const response = await axios.get(
-      `http://www.omdbapi.com/?apikey=your_api_key_here&i=${id}`
+      `http://www.omdbapi.com/?apikey=4feb8896&i=${id}`
     );
     return response.data as Movie;
   }
