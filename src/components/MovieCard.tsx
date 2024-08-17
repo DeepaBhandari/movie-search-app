@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 
 interface MovieCardProps {
   movie: any;
@@ -15,12 +16,20 @@ const MovieCard: React.FC<MovieCardProps> = ({ movie, onAddToWatchlist }) => {
       />
       <h3 className="text-lg font-bold">{movie.Title}</h3>
       <p className="text-gray-700">{movie.Year}</p>
-      <button
-        onClick={() => onAddToWatchlist(movie)}
-        className="mt-2 bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600"
-      >
-        Add to Watchlist
-      </button>
+      <div className="flex justify-between mt-4">
+        <Link
+          to={`/movie/${movie.imdbID}`}
+          className="text-blue-500 hover:underline"
+        >
+          View Details
+        </Link>
+        <button
+          onClick={() => onAddToWatchlist(movie)}
+          className="bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600"
+        >
+          Add to Watchlist
+        </button>
+      </div>
     </div>
   );
 };
