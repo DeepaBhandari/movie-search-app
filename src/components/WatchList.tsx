@@ -5,11 +5,13 @@ import { Movie } from "../types/movie";
 interface WatchlistProps {
   movies: Movie[];
   onRemoveFromWatchlist: (id: string) => void;
+  onViewDetails: (movie: Movie) => void;
 }
 
 const Watchlist: React.FC<WatchlistProps> = ({
   movies,
   onRemoveFromWatchlist,
+  onViewDetails,
 }) => {
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
@@ -20,7 +22,7 @@ const Watchlist: React.FC<WatchlistProps> = ({
           isInWatchlist={true}
           onAddToWatchlist={() => {}}
           onRemoveFromWatchlist={() => onRemoveFromWatchlist(movie.imdbID)}
-          onViewDetails={() => {}}
+          onViewDetails={() => onViewDetails(movie)}
         />
       ))}
     </div>

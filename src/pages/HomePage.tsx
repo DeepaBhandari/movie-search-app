@@ -115,6 +115,7 @@ const HomePage: React.FC = () => {
             <Watchlist
               movies={watchlist}
               onRemoveFromWatchlist={handleRemoveFromWatchlist}
+              onViewDetails={handleViewDetails}
             />
           ) : (
             <p>No movies in your watchlist</p>
